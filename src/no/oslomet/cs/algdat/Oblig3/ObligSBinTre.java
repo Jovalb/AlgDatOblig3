@@ -111,14 +111,21 @@ public class ObligSBinTre<T> implements Beholder<T>
       return 0;
     }
 
-    Node<T> p = rot,v,h;               // p starter i roten, v er venstrebarn,h er høyrebarn
-    v = p.venstre;
-    h = p.høyre;
-    int antall = 0;
+    // kode hentet fra kompendiet
+    Node<T> p = rot;
+    int antallVerdi = 0;
 
-    int cmp = 0;                             // hjelpevariabel
-
-    return antall;
+    while (p != null)
+    {
+      int cmp = comp.compare(verdi,p.verdi);
+      if (cmp < 0) p = p.venstre;
+      else
+      {
+        if (cmp == 0) antallVerdi++;
+        p = p.høyre;
+      }
+    }
+    return antallVerdi;
   }
   
   @Override
