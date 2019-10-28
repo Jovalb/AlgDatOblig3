@@ -5,11 +5,11 @@ import java.util.Comparator;
 public class Main {
 
     public static void main(String[] args) {
+        Integer[] a = {4,7,2,9,5,10,8,1,3,6};
         ObligSBinTre<Integer> tre = new ObligSBinTre<>(Comparator.naturalOrder());
-        ObligSBinTre<Character> tre1 = new ObligSBinTre<>(Comparator.naturalOrder());
-        ObligSBinTre<String> tre2 = new ObligSBinTre<>(Comparator.naturalOrder());
+        for (int verdi: a){
+            tre.leggInn(verdi);
+        }
         System.out.println(tre.antall());
-        System.out.println(tre1.antall());
-        System.out.println(tre2.antall());
     }
 }
