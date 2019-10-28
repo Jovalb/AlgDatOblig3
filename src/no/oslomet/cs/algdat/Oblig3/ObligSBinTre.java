@@ -134,13 +134,19 @@ public class ObligSBinTre<T> implements Beholder<T> {
 
     private static <T> Node<T> nesteInorden(Node<T> p) {
 
-        if (p.høyre != null) {
+        if (p.høyre != null) {  // her traverserer vi inn i høyre substre når mulig
             p = p.høyre;
-            while (p.venstre != null) {
+            while (p.venstre != null) {     // går nedover til nederste venstre punkt i høyre subtre
                 p = p.venstre;
             }
         } else {    // hvis høyre er null må vi gå opp et hakk
-            p = p.forelder;
+            while (p != null) {     // her løper vi opp treet tilbake til første node som ikke har tidligere brukt noder på sin høyre side
+                if (p.forelder != null && p.forelder.høyre != p) {
+                    return p.forelder;
+                } else {
+                    p = p.forelder;
+                }
+            }
         }
 
         return p;
@@ -153,20 +159,28 @@ public class ObligSBinTre<T> implements Beholder<T> {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("[");
 
-        while (p.venstre != null){  // blar helt ned til nederste venstre blad
-            p = p.venstre;
+        if (tom()) {        // hvis input er tomt returnerer vi tom array
+            stringBuilder.append("]");
+            return stringBuilder.toString();
+        } else {
+            while (p.venstre != null) {  // blar helt ned til nederste venstre blad
+                p = p.venstre;
+            }
+
+            for (int i = 0; i < antall; i++) {
+                if (i == antall - 1) {
+                    stringBuilder.append(p.verdi);      // glemmer komma på siste plass for ryddighet
+                } else {
+                    stringBuilder.append(p.verdi + ", "); // legger inn første verdi
+                }
+                p = nesteInorden(p);    // traverserer til neste inorder
+            }
+
+            stringBuilder.append("]");
+
+            return stringBuilder.toString();
         }
 
-        for (int i = 0; i < antall; i++) {
-            stringBuilder.append(p.verdi + ", "); // legger inn første verdi
-            p = nesteInorden(p);    // traverserer til neste inorder
-        }
-
-        stringBuilder.setLength(antall-1);
-
-        stringBuilder.append("]");
-
-        return stringBuilder.toString();
     }
 
     public String omvendtString() {
