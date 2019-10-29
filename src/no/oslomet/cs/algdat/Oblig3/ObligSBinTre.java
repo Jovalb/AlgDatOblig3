@@ -322,35 +322,41 @@ public class ObligSBinTre<T> implements Beholder<T> {
         return stringBuilder.toString();
     }
 
+
     public String lengstGren() {
-        if (tom()) return "[]";
-
-        Node<T> p = rot,v = p.venstre,h = p.høyre;
-        int teller = 0;
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("[");
-
-        stringBuilder.append(p.verdi + ", ");
-
-
-        while (v.høyre != null || v.venstre != null) {
-            if (v.venstre != null) {
-                stringBuilder.append(v.verdi + ", ");
-                v = v.venstre;
-                teller++;
-            } else {
-                stringBuilder.append(v.verdi + ", ");
-                v = v.høyre;
-                teller++;
-            }
+        if (tom()){
+            return "[]";
+        } else if (antall == 1){
+            return "[" + rot.verdi + "]";
         }
 
-        stringBuilder.append(v.verdi);
+        ArrayDeque<Node<T>> stakk = new ArrayDeque<>(); // lager først et deque for å hjelpe å traversere
+        StringBuilder stringBuilder = new StringBuilder();
+        Node<T> p = rot;
+        stakk.add(p);
+
+        while(!stakk.isEmpty()){
+            p = stakk.removeLast();
+
+            if (p.venstre != null){
+                stakk.add(p.venstre);
+            }
+            if (p.høyre != null){
+                stakk.add(p.høyre);
+            }
 
 
-
-
+        }
         stringBuilder.append("]");
+
+        while (p.forelder != null){
+            stringBuilder.append(p.verdi + " ,");// her måtte jeg reversere komma og [ ] pga det kom i revers
+            p = p.forelder;
+        }
+        stringBuilder.append(p.verdi); // siste uten komma
+
+        stringBuilder.append("[");
+        stringBuilder.reverse();
 
         return stringBuilder.toString();
     }
