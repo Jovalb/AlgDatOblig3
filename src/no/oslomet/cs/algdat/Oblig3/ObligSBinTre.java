@@ -184,7 +184,36 @@ public class ObligSBinTre<T> implements Beholder<T> {
     }
 
     public String omvendtString() {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
+        if (tom()) return "[]";     // fant ut at dette var mer effektivt hvis liste var tom
+
+        TabellStakk<Node<T>> stakk = new TabellStakk<>();       // lager stakk som skal brukes
+        Node<T> p = rot;        // starter i roten
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("[");
+
+
+        while (p.venstre != null) {  // blar helt ned til nederste venstre blad
+            p = p.venstre;
+        }
+
+        for (int i = 0; i < antall; i++) {
+            stakk.leggInn(p);       // legger inn verdi i stakk i LIFO order
+            p = nesteInorden(p);    // traverserer til neste inorder
+        }
+
+        while (!stakk.tom()){
+            if (stakk.antall() == 1){   // hvis vi er på siste verdi hopper vi over komma
+                stringBuilder.append(stakk.taUt());
+            } else {
+                stringBuilder.append(stakk.taUt() + ", ");      // legger inn i string med å ta ut siste verdi i stakk
+            }
+        }
+
+        stringBuilder.append("]");
+
+        return stringBuilder.toString();
     }
 
     public String høyreGren() {
