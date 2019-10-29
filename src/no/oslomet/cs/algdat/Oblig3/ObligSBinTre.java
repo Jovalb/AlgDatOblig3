@@ -201,7 +201,7 @@ public class ObligSBinTre<T> implements Beholder<T> {
                     p = p.venstre;
                 } else if (p.høyre != null) { // sjekker høyre om venstre ikke er mulig
                     p = p.høyre;
-                } else if (antall == 1){    // sletter siste element
+                } else if (antall == 1) {    // sletter siste element
                     fjern(p.verdi);
                 } else {    // utfører fjerning
                     q = p;  // lagrer midlertidig med hjelpevariabel
@@ -297,11 +297,62 @@ public class ObligSBinTre<T> implements Beholder<T> {
     }
 
     public String høyreGren() {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if (tom()) return "[]";
+
+        Node<T> p = rot;        // starter i roten
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("[");
+
+        while (p.høyre != null || p.venstre != null) {
+            if (p.høyre != null) {
+                stringBuilder.append(p.verdi + ", ");
+                p = p.høyre;
+            } else {
+                stringBuilder.append(p.verdi + ", ");
+                p = p.venstre;
+            }
+        }
+
+        stringBuilder.append(p.verdi); // tar med siste verdi uten komma
+
+
+        stringBuilder.append("]");
+
+        return stringBuilder.toString();
     }
 
     public String lengstGren() {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if (tom()) return "[]";
+
+        Node<T> p = rot,v = p.venstre,h = p.høyre;
+        int teller = 0;
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("[");
+
+        stringBuilder.append(p.verdi + ", ");
+
+
+        while (v.høyre != null || v.venstre != null) {
+            if (v.venstre != null) {
+                stringBuilder.append(v.verdi + ", ");
+                v = v.venstre;
+                teller++;
+            } else {
+                stringBuilder.append(v.verdi + ", ");
+                v = v.høyre;
+                teller++;
+            }
+        }
+
+        stringBuilder.append(v.verdi);
+
+
+
+
+        stringBuilder.append("]");
+
+        return stringBuilder.toString();
     }
 
     public String[] grener() {
