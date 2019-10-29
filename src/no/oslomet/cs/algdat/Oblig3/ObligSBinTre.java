@@ -67,6 +67,7 @@ public class ObligSBinTre<T> implements Beholder<T> {
         else q.høyre = p;                        // høyre barn til q
 
         antall++;                                // én verdi mer i treet
+        endringer++;                             // oppdaterer endringer
         return true;
     }
 
@@ -88,11 +89,72 @@ public class ObligSBinTre<T> implements Beholder<T> {
 
     @Override
     public boolean fjern(T verdi) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        // hentet kode fra kompendiet 5.2.8 d)
+        if (verdi == null) return false;  // treet har ingen nullverdier
+
+        Node<T> p = rot, q = null;   // q skal være forelder til p
+
+        while (p != null)            // leter etter verdi
+        {
+            int cmp = comp.compare(verdi, p.verdi);      // sammenligner
+            if (cmp < 0) {
+                q = p;
+                p = p.venstre;
+            }      // går til venstre
+            else if (cmp > 0) {
+                q = p;
+                p = p.høyre;
+            }   // går til høyre
+            else break;    // den søkte verdien ligger i p
+        }
+        if (p == null) return false;   // finner ikke verdi
+
+        if (p.venstre == null || p.høyre == null)  // Tilfelle 1) og 2)
+        {
+            Node<T> b = p.venstre != null ? p.venstre : p.høyre;  // b for barn
+            if (p == rot) {
+                rot = b;
+                //rot.forelder = null;    // hvis b blir roten setter vi forelder til null
+            } else if (p == q.venstre) {
+                q.venstre = b;
+                if (b != null) {
+                    b.forelder = q; // her oppdaterer vi barnet sin forelder
+                }
+            } else {
+                q.høyre = b;
+                if (b != null) {
+                    b.forelder = q; // her oppdaterer vi barnet sin forelder
+                }
+            }
+        } else  // Tilfelle 3)
+        {
+            Node<T> s = p, r = p.høyre;   // finner neste i inorden
+            while (r.venstre != null) {
+                s = r;    // s er forelder til r
+                r = r.venstre;
+            }
+
+            p.verdi = r.verdi;   // kopierer verdien i r til p
+
+            if (s != p) s.venstre = r.høyre;
+            else s.høyre = r.høyre;
+        }
+
+        antall--;   // det er nå én node mindre i treet
+        endringer++;    // oppdaterer endringer
+        return true;
     }
 
     public int fjernAlle(T verdi) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        Objects.requireNonNull(verdi, "Ulovlig med nullverdier!");
+        int antallFjernet = 0;
+
+        while (inneholder(verdi)) {     // sjekker om treet inneholder tallet som det spørres om
+            fjern(verdi);       // fjerner verdien
+            antallFjernet++;
+        }
+
+        return antallFjernet;
     }
 
     @Override
@@ -129,7 +191,51 @@ public class ObligSBinTre<T> implements Beholder<T> {
 
     @Override
     public void nullstill() {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if (tom()) {
+            return;
+        } else {
+            Node<T> p = rot, q;
+
+            while (!tom()) {
+                if (p.venstre != null) {
+                    p = p.venstre;
+                } else if (p.høyre != null) {
+                    p = p.høyre;
+                } else if (antall == 1){
+                    fjern(p.verdi);
+                } else {
+                    q = p;
+                    fjern(p.verdi);
+                    p = q.forelder;
+                }
+            }
+
+            /*while (p.venstre != null) {
+                p = p.venstre;
+            }
+
+            for (int i = 0; antall > 0; i++) {
+                if (antall == 1) {
+                    fjern(p.verdi);
+                } else if (p.venstre == null && p.høyre == null) {
+                    q = nesteInorden(p);
+                    fjern(p.verdi);
+                    if (q == null) {     // hvis hjelpevariabelen q når slutten av inorden rekken starter vi på nytt i roten
+                        q = p.forelder;
+                    }
+                    p = q;
+                } else {
+                    q = nesteInorden(p);
+                    if (q == null) {
+                        p = p.forelder;
+                    } else {
+                        p = nesteInorden(p);
+                    }
+
+                }
+            }*/
+
+        }
     }
 
     private static <T> Node<T> nesteInorden(Node<T> p) {
@@ -203,8 +309,8 @@ public class ObligSBinTre<T> implements Beholder<T> {
             p = nesteInorden(p);    // traverserer til neste inorder
         }
 
-        while (!stakk.tom()){
-            if (stakk.antall() == 1){   // hvis vi er på siste verdi hopper vi over komma
+        while (!stakk.tom()) {
+            if (stakk.antall() == 1) {   // hvis vi er på siste verdi hopper vi over komma
                 stringBuilder.append(stakk.taUt());
             } else {
                 stringBuilder.append(stakk.taUt() + ", ");      // legger inn i string med å ta ut siste verdi i stakk
