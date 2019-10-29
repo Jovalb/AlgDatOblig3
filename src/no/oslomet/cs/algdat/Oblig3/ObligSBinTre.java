@@ -332,7 +332,9 @@ public class ObligSBinTre<T> implements Beholder<T> {
 
         ArrayDeque<Node<T>> stakk = new ArrayDeque<>(); // lager først et deque for å hjelpe å traversere
         StringBuilder stringBuilder = new StringBuilder();
-        Node<T> p = rot;
+        int lengsteVei = 0;
+        int tempVei = 0;
+        Node<T> p = rot, lengstGren = null, q;
         stakk.add(p);
 
         while(!stakk.isEmpty()){
@@ -344,9 +346,23 @@ public class ObligSBinTre<T> implements Beholder<T> {
             if (p.høyre != null){
                 stakk.add(p.høyre);
             }
-
+            if (p.venstre == null && p.høyre == null){
+                q = p;
+                while (q.forelder != null){
+                    q = q.forelder;
+                    tempVei++;
+                }
+            }
+            if (tempVei >= lengsteVei){
+                lengstGren = p;
+                lengsteVei = tempVei;
+            }
+            tempVei = 0;
 
         }
+        
+        p = lengstGren;
+
         stringBuilder.append("]");
 
         while (p.forelder != null){
