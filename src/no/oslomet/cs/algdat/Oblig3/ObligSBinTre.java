@@ -196,45 +196,19 @@ public class ObligSBinTre<T> implements Beholder<T> {
         } else {
             Node<T> p = rot, q;
 
-            while (!tom()) {
-                if (p.venstre != null) {
+            while (!tom()) {    // jobber helt til treet er tomt
+                if (p.venstre != null) {    // sjekker helt til venstre først
                     p = p.venstre;
-                } else if (p.høyre != null) {
+                } else if (p.høyre != null) { // sjekker høyre om venstre ikke er mulig
                     p = p.høyre;
-                } else if (antall == 1){
+                } else if (antall == 1){    // sletter siste element
                     fjern(p.verdi);
-                } else {
-                    q = p;
-                    fjern(p.verdi);
-                    p = q.forelder;
+                } else {    // utfører fjerning
+                    q = p;  // lagrer midlertidig med hjelpevariabel
+                    fjern(p.verdi);     // fjerner
+                    p = q.forelder; // går opp et hakk
                 }
             }
-
-            /*while (p.venstre != null) {
-                p = p.venstre;
-            }
-
-            for (int i = 0; antall > 0; i++) {
-                if (antall == 1) {
-                    fjern(p.verdi);
-                } else if (p.venstre == null && p.høyre == null) {
-                    q = nesteInorden(p);
-                    fjern(p.verdi);
-                    if (q == null) {     // hvis hjelpevariabelen q når slutten av inorden rekken starter vi på nytt i roten
-                        q = p.forelder;
-                    }
-                    p = q;
-                } else {
-                    q = nesteInorden(p);
-                    if (q == null) {
-                        p = p.forelder;
-                    } else {
-                        p = nesteInorden(p);
-                    }
-
-                }
-            }*/
-
         }
     }
 
