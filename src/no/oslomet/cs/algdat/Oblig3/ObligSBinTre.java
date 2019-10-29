@@ -332,12 +332,13 @@ public class ObligSBinTre<T> implements Beholder<T> {
 
         ArrayDeque<Node<T>> stakk = new ArrayDeque<>(); // lager først et deque for å hjelpe å traversere
         StringBuilder stringBuilder = new StringBuilder();
-        int lengsteVei = 0;
-        int tempVei = 0;
-        Node<T> p = rot, lengstGren = null, q;
-        stakk.add(p);
+        int lengsteVei = 0;     // hjelpevariabel
+        int tempVei = 0;        // hjelpevariabel
+        Node<T> p = rot, lengstGren = null, q;      // initialiserer p og lengstegren siden de skal brukes senere
+        // q er en hjelpenode
+        stakk.add(p);       // legger roten inn i stakk
 
-        while(!stakk.isEmpty()){
+        while(!stakk.isEmpty()){        // løkken jobber helt til alle noder er sjekket ut av stakken
             p = stakk.removeLast();
 
             if (p.venstre != null){
@@ -346,14 +347,14 @@ public class ObligSBinTre<T> implements Beholder<T> {
             if (p.høyre != null){
                 stakk.add(p.høyre);
             }
-            if (p.venstre == null && p.høyre == null){
+            if (p.venstre == null && p.høyre == null){  // når vi kommer til bladnode sjekker vi lengden på gren frem dit
                 q = p;
                 while (q.forelder != null){
                     q = q.forelder;
                     tempVei++;
                 }
             }
-            if (tempVei >= lengsteVei){
+            if (tempVei >= lengsteVei){     // lagrer den lengste grenen og sammenligner med de andre grenene
                 lengstGren = p;
                 lengsteVei = tempVei;
             }
@@ -361,7 +362,7 @@ public class ObligSBinTre<T> implements Beholder<T> {
 
         }
         
-        p = lengstGren;
+        p = lengstGren; // siste gren som blir satt som lengst skrives ut
 
         stringBuilder.append("]");
 
