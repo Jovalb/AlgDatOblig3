@@ -324,9 +324,9 @@ public class ObligSBinTre<T> implements Beholder<T> {
 
 
     public String lengstGren() {
-        if (tom()){
+        if (tom()) {
             return "[]";
-        } else if (antall == 1){
+        } else if (antall == 1) {
             return "[" + rot.verdi + "]";
         }
 
@@ -338,35 +338,35 @@ public class ObligSBinTre<T> implements Beholder<T> {
         // q er en hjelpenode
         stakk.add(p);       // legger roten inn i stakk
 
-        while(!stakk.isEmpty()){        // løkken jobber helt til alle noder er sjekket ut av stakken
+        while (!stakk.isEmpty()) {        // løkken jobber helt til alle noder er sjekket ut av stakken
             p = stakk.removeLast();
 
-            if (p.venstre != null){
+            if (p.venstre != null) {
                 stakk.add(p.venstre);
             }
-            if (p.høyre != null){
+            if (p.høyre != null) {
                 stakk.add(p.høyre);
             }
-            if (p.venstre == null && p.høyre == null){  // når vi kommer til bladnode sjekker vi lengden på gren frem dit
+            if (p.venstre == null && p.høyre == null) {  // når vi kommer til bladnode sjekker vi lengden på gren frem dit
                 q = p;
-                while (q.forelder != null){
+                while (q.forelder != null) {
                     q = q.forelder;
                     tempVei++;
                 }
             }
-            if (tempVei >= lengsteVei){     // lagrer den lengste grenen og sammenligner med de andre grenene
+            if (tempVei >= lengsteVei) {     // lagrer den lengste grenen og sammenligner med de andre grenene
                 lengstGren = p;
                 lengsteVei = tempVei;
             }
             tempVei = 0;
 
         }
-        
+
         p = lengstGren; // siste gren som blir satt som lengst skrives ut
 
         stringBuilder.append("]");
 
-        while (p.forelder != null){
+        while (p.forelder != null) {
             stringBuilder.append(p.verdi + " ,");// her måtte jeg reversere komma og [ ] pga det kom i revers
             p = p.forelder;
         }
@@ -379,7 +379,61 @@ public class ObligSBinTre<T> implements Beholder<T> {
     }
 
     public String[] grener() {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
+        ArrayList<String> grener = new ArrayList<>();
+        String [] stringArr;
+
+        if (tom()){
+            stringArr = new String [grener.size()];
+            return stringArr;
+        }
+
+        ArrayDeque<Node<T>> stakk = new ArrayDeque<>(); // lager først et deque for å hjelpe å traversere
+        StringBuilder stringBuilder = new StringBuilder();
+        int lengsteVei = 0;     // hjelpevariabel
+        int tempVei = 0;        // hjelpevariabel
+        Node<T> p = rot, lengstGren = null, q;      // initialiserer p og lengstegren siden de skal brukes senere
+        // q er en hjelpenode
+        stakk.add(p);       // legger roten inn i stakk
+
+        while (!stakk.isEmpty()) {        // løkken jobber helt til alle noder er sjekket ut av stakken
+            p = stakk.removeLast();
+
+            if (p.venstre != null) {
+                stakk.add(p.venstre);
+            }
+            if (p.høyre != null) {
+                stakk.add(p.høyre);
+            }
+            if (p.venstre == null && p.høyre == null) {  // når vi kommer til bladnode sjekker vi lengden på gren frem dit
+                stringBuilder.append("]");
+                q = p;
+                while (q.forelder != null) {
+                    stringBuilder.append(q.verdi + " ,");
+                    q = q.forelder;
+                    tempVei++;
+                }
+                stringBuilder.append(q.verdi + "[");
+                stringBuilder.reverse();
+                grener.add(stringBuilder.toString());
+                stringBuilder = new StringBuilder(); // resetter stringbuilder
+
+            }
+            if (tempVei >= lengsteVei) {     // lagrer den lengste grenen og sammenligner med de andre grenene
+                lengstGren = p;
+                lengsteVei = tempVei;
+            }
+            tempVei = 0;
+
+        }
+        stringArr = new String[grener.size()];
+        int n = stringArr.length-1;
+
+        for (int i = n; i >= 0; i--) {
+            stringArr[n-i] = grener.get(i);
+        }
+
+        return stringArr;
     }
 
     public String bladnodeverdier() {
