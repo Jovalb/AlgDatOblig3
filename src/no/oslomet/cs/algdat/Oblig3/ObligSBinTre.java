@@ -364,16 +364,26 @@ public class ObligSBinTre<T> implements Beholder<T> {
 
         p = lengstGren; // siste gren som blir satt som lengst skrives ut
 
-        stringBuilder.append("]");
-
+        stakk.add(p);
         while (p.forelder != null) {
-            stringBuilder.append(p.verdi + " ,");// her måtte jeg reversere komma og [ ] pga det kom i revers
             p = p.forelder;
+            stakk.add(p);
         }
-        stringBuilder.append(p.verdi); // siste uten komma
 
         stringBuilder.append("[");
-        stringBuilder.reverse();
+
+        while(!stakk.isEmpty()){
+            p = stakk.removeLast();
+            if (stakk.isEmpty()){
+                stringBuilder.append(p.verdi);
+            } else {
+                stringBuilder.append(p.verdi + ", ");
+            }
+        }
+        //stringBuilder.append(p.verdi + ", ");// her måtte jeg reversere komma og [ ] pga det kom i revers
+        //stringBuilder.append(p.verdi); // siste uten komma
+
+        stringBuilder.append("]");
 
         return stringBuilder.toString();
     }
