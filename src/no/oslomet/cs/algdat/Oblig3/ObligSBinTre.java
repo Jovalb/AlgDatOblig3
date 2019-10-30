@@ -341,10 +341,10 @@ public class ObligSBinTre<T> implements Beholder<T> {
         while (!stakk.isEmpty()) {        // løkken jobber helt til alle noder er sjekket ut av stakken
             p = stakk.removeLast();
 
-            if (p.venstre != null) {
+            if (p.venstre != null) {        //sjekker venstre
                 stakk.add(p.venstre);
             }
-            if (p.høyre != null) {
+            if (p.høyre != null) {          //sjekker høyre
                 stakk.add(p.høyre);
             }
             if (p.venstre == null && p.høyre == null) {  // når vi kommer til bladnode sjekker vi lengden på gren frem dit
@@ -367,14 +367,14 @@ public class ObligSBinTre<T> implements Beholder<T> {
         stakk.add(p);
         while (p.forelder != null) {
             p = p.forelder;
-            stakk.add(p);
+            stakk.add(p);       // utnytter stakk på nytt og legger inn hele grenen inn i stakk
         }
 
         stringBuilder.append("[");
 
-        while(!stakk.isEmpty()){
-            p = stakk.removeLast();
-            if (stakk.isEmpty()){
+        while (!stakk.isEmpty()) {
+            p = stakk.removeLast();     // henter ut av stakken og lager string
+            if (stakk.isEmpty()) {
                 stringBuilder.append(p.verdi);
             } else {
                 stringBuilder.append(p.verdi + ", ");
@@ -391,14 +391,15 @@ public class ObligSBinTre<T> implements Beholder<T> {
     public String[] grener() {
 
         ArrayList<String> grener = new ArrayList<>();
-        String [] stringArr;
+        String[] stringArr;
 
-        if (tom()){
-            stringArr = new String [grener.size()];
+        if (tom()) {
+            stringArr = new String[grener.size()];
             return stringArr;
         }
 
         ArrayDeque<Node<T>> stakk = new ArrayDeque<>(); // lager først et deque for å hjelpe å traversere
+        ArrayDeque<Node<T>> stakk2 = new ArrayDeque<>(); // lager nytt deque for å helpe med å bygge streng
         StringBuilder stringBuilder = new StringBuilder();
         int lengsteVei = 0;     // hjelpevariabel
         int tempVei = 0;        // hjelpevariabel
@@ -409,38 +410,41 @@ public class ObligSBinTre<T> implements Beholder<T> {
         while (!stakk.isEmpty()) {        // løkken jobber helt til alle noder er sjekket ut av stakken
             p = stakk.removeLast();
 
-            if (p.venstre != null) {
+            if (p.venstre != null) {    // sjekker venstre
                 stakk.add(p.venstre);
             }
-            if (p.høyre != null) {
+            if (p.høyre != null) {      // sjekker høyre
                 stakk.add(p.høyre);
             }
             if (p.venstre == null && p.høyre == null) {  // når vi kommer til bladnode sjekker vi lengden på gren frem dit
-                stringBuilder.append("]");
+                stringBuilder.append("[");
                 q = p;
+                stakk2.add(q);      // utnytter stakk2 for p traversere og bygge streng
                 while (q.forelder != null) {
-                    stringBuilder.append(q.verdi + " ,");
                     q = q.forelder;
-                    tempVei++;
+                    stakk2.add(q);
                 }
-                stringBuilder.append(q.verdi + "[");
-                stringBuilder.reverse();
+                while (!stakk2.isEmpty()) {
+                    q = stakk2.removeLast();
+                    if (stakk2.isEmpty()) {
+                        stringBuilder.append(q.verdi);
+                    } else {
+                        stringBuilder.append(q.verdi + ", ");
+                    }
+                }
+                stringBuilder.append("]");
                 grener.add(stringBuilder.toString());
                 stringBuilder = new StringBuilder(); // resetter stringbuilder
 
             }
-            if (tempVei >= lengsteVei) {     // lagrer den lengste grenen og sammenligner med de andre grenene
-                lengstGren = p;
-                lengsteVei = tempVei;
-            }
-            tempVei = 0;
 
         }
+
         stringArr = new String[grener.size()];
-        int n = stringArr.length-1;
+        int n = stringArr.length - 1;
 
         for (int i = n; i >= 0; i--) {
-            stringArr[n-i] = grener.get(i);
+            stringArr[n - i] = grener.get(i);
         }
 
         return stringArr;

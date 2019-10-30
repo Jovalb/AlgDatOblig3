@@ -34,15 +34,15 @@ public class Main {
         }
 
         //System.out.println(tre.høyreGren());
-        System.out.println(tre.lengstGren());
+        //System.out.println(tre.lengstGren());
 
         ObligSBinTre<Character> tre1 = new ObligSBinTre<>(Comparator.naturalOrder());
 
-        /*String [] s = tre.grener();
+        String [] s = tre.grener();
 
         for (String e : s){
             System.out.println(e);
-        }*/
+        }
 
     }
 }
