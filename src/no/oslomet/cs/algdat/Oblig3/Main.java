@@ -47,6 +47,7 @@ public class Main {
         }*/
 
         System.out.println(tre.bladnodeverdier());
+        System.out.println(tre.postString());
 
 
 

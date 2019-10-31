@@ -453,21 +453,7 @@ public class ObligSBinTre<T> implements Beholder<T> {
         return stringArr;
     }
 
-    /*private String bladNodeHjelper(Node<T> p,StringJoiner stringJoiner){
-
-        while (nesteInorden(p) != null){
-            if (p.venstre != null || p.høyre != null){
-                bladNodeHjelper(nesteInorden(p),stringJoiner);
-            }
-            stringJoiner.add(p.verdi.toString());
-            bladNodeHjelper(nesteInorden(p),stringJoiner);
-        }
-
-
-        return stringJoiner.toString();
-    }*/ // startet å lage denne metoden men ble usikker på hvordan jeg skulle fullføre den
-
-    private void inOrderBladNoder(Node node, StringJoiner stringJoiner){
+    private void inOrderBladNoder(Node<T> node, StringJoiner stringJoiner){
         if (node == null){
             return;
         }
@@ -519,8 +505,42 @@ public class ObligSBinTre<T> implements Beholder<T> {
         return stringJoiner.toString();
     }
 
+    private void postOrderHjelper(Node<T> node, StringJoiner stringJoiner){
+        if (node == null){
+            return;
+        }
+
+        //Her utnytter vi 2 stakker for å iterativt legge inn alle verdiene i post-order
+        TabellStakk<Node<T>> stakk1 = new TabellStakk<>();
+        TabellStakk<Node<T>> stakk2 = new TabellStakk<>();
+
+        stakk1.leggInn(node);       // begynner med roten
+        while (!stakk1.tom()){
+            node = stakk1.taUt();       // roten legges inn først / henter ut siste node fra stakk 1
+            stakk2.leggInn(node);
+            if (node.venstre != null){
+                stakk1.leggInn(node.venstre);       // traverserer først venstre
+            }
+            if (node.høyre != null){        // deretter traverserer høyre
+                stakk1.leggInn(node.høyre);
+            }
+        }
+
+        while (!stakk2.tom()){
+            stringJoiner.add(stakk2.taUt().toString());
+        }
+
+    }
+
     public String postString() {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        if (tom()){
+            return "[]";
+        }
+        Node<T> p = rot;
+        StringJoiner stringJoiner = new StringJoiner(", ","[","]");
+        postOrderHjelper(p,stringJoiner);
+
+        return stringJoiner.toString();
     }
 
     @Override
