@@ -453,7 +453,7 @@ public class ObligSBinTre<T> implements Beholder<T> {
         return stringArr;
     }
 
-    private String bladNodeHjelper(Node<T> p,StringJoiner stringJoiner){
+    /*private String bladNodeHjelper(Node<T> p,StringJoiner stringJoiner){
 
         while (nesteInorden(p) != null){
             if (p.venstre != null || p.høyre != null){
@@ -465,6 +465,18 @@ public class ObligSBinTre<T> implements Beholder<T> {
 
 
         return stringJoiner.toString();
+    }*/ // startet å lage denne metoden men ble usikker på hvordan jeg skulle fullføre den
+
+    private void inOrderBladNoder(Node node, StringJoiner stringJoiner){
+        if (node == null){
+            return;
+        }
+
+        inOrderBladNoder(node.venstre,stringJoiner);
+        if (node.venstre == null && node.høyre == null){
+            stringJoiner.add(node.verdi.toString());
+        }
+        inOrderBladNoder(node.høyre,stringJoiner);
     }
 
     public String bladnodeverdier() {
@@ -481,7 +493,8 @@ public class ObligSBinTre<T> implements Beholder<T> {
         } else if (antall == 1) {
             stringJoiner.add(p.verdi.toString());
         } else {
-            while(p.venstre != null){
+            inOrderBladNoder(rot,stringJoiner);
+            /*while(p.venstre != null){
                 p = p.venstre;
             }
 
@@ -495,7 +508,7 @@ public class ObligSBinTre<T> implements Beholder<T> {
                 }
                 //stringBuilder.append(p.verdi + ", ");
 
-            }
+            }*/
 
         }
 
