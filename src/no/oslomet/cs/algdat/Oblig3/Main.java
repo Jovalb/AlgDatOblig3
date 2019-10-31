@@ -36,13 +36,19 @@ public class Main {
         //System.out.println(tre.høyreGren());
         //System.out.println(tre.lengstGren());
 
-        ObligSBinTre<Character> tre1 = new ObligSBinTre<>(Comparator.naturalOrder());
+        ObligSBinTre<Integer> tre1 = new ObligSBinTre<>(Comparator.naturalOrder());
+        tre1.leggInn(1);
+        //System.out.println(tre1.bladnodeverdier());
 
-        String [] s = tre.grener();
+        /*String [] s = tre.grener();
 
         for (String e : s){
             System.out.println(e);
-        }
+        }*/
+
+        System.out.println(tre.bladnodeverdier());
+
+
 
     }
 }

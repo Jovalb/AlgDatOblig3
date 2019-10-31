@@ -213,6 +213,9 @@ public class ObligSBinTre<T> implements Beholder<T> {
     }
 
     private static <T> Node<T> nesteInorden(Node<T> p) {
+        if (p == null){
+            return null;
+        }
 
         if (p.høyre != null) {  // her traverserer vi inn i høyre substre når mulig
             p = p.høyre;
@@ -450,8 +453,57 @@ public class ObligSBinTre<T> implements Beholder<T> {
         return stringArr;
     }
 
+    private String bladNodeHjelper(Node<T> p,StringJoiner stringJoiner){
+
+        while (nesteInorden(p) != null){
+            if (p.venstre != null || p.høyre != null){
+                bladNodeHjelper(nesteInorden(p),stringJoiner);
+            }
+            stringJoiner.add(p.verdi.toString());
+            bladNodeHjelper(nesteInorden(p),stringJoiner);
+        }
+
+
+        return stringJoiner.toString();
+    }
+
     public String bladnodeverdier() {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        Node<T> p = rot;
+        //StringBuilder stringBuilder = new StringBuilder();
+        StringJoiner stringJoiner = new StringJoiner(", ","[","]");
+        //      utnytter stringjoiner for å skape strengen
+
+
+        //stringBuilder.append("[");
+
+        if (tom()){
+            return "[]";
+        } else if (antall == 1) {
+            stringJoiner.add(p.verdi.toString());
+        } else {
+            while(p.venstre != null){
+                p = p.venstre;
+            }
+
+            while (p != null){// her tar jeg i nytte inorden metoden fra tidligere
+                if (p.venstre != null || p.høyre != null){
+                    p = nesteInorden(p);
+                } else {
+                    String s = p.verdi.toString();
+                    stringJoiner.add(s);
+                    p = nesteInorden(p);
+                }
+                //stringBuilder.append(p.verdi + ", ");
+
+            }
+
+        }
+
+        //stringBuilder.append("]");
+
+
+        //return bladNodeHjelper(p,stringJoiner);
+        return stringJoiner.toString();
     }
 
     public String postString() {
