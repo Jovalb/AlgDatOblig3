@@ -537,7 +537,7 @@ public class ObligSBinTre<T> implements Beholder<T> {
                 p = p.venstre;
             }
 
-            while (p.venstre != null || p.høyre != null) {
+            while (p.venstre != null || p.høyre != null && nesteInorden(p) != null) {
                 p = nesteInorden(p);    // finner første i inorden uten barn
             }
         }
@@ -573,24 +573,23 @@ public class ObligSBinTre<T> implements Beholder<T> {
             } else {
                 removeOK = false;
             }
-            if (antall == 1){
-                p = null;
-            }
-            Node<T> q = p;
-            Node<T> parent = p.forelder;
-            if (parent.venstre == q){
-                parent.venstre = null;
+            if (antall == 1) {  // hvis vi er på siste element setter vi den bare til null
                 q = null;
-            } else if (parent.høyre == q){
-                q = null;
-                parent.høyre = null;
+            } else {
+                Node<T> parent = q.forelder;    // bruker forelderen til q
+                if (parent.venstre == q) {      // hvis q er venstrebarn setter vi den til null
+                    parent.venstre = null;
+                    q = null;
+                } else if (parent.høyre == q) { // hvis q er høyrebarn setter vi den til null
+                    q = null;
+                    parent.høyre = null;
+                }
             }
-            next();
 
-            antall--;
+
+            antall--;   // oppdaterer antall, endringer og iteratorendringer
             endringer++;
             iteratorendringer++;
-
 
         }
 

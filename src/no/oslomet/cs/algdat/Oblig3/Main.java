@@ -49,12 +49,12 @@ public class Main {
         /*System.out.println(tre.bladnodeverdier());
         System.out.println(tre.postString());*/
 
-        for (Character c : tre) System.out.print(c + " ");
+        //for (Character c : tre) System.out.print(c + " ");
 
-        /*while(!tre.tom()){
+        while(!tre.tom()){
             System.out.println(tre);
             tre.fjernHvis(x -> true);
-        }*/
+        }
 
 
     }
