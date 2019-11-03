@@ -51,6 +51,10 @@ public class Main {
 
         for (Character c : tre) System.out.print(c + " ");
 
+        /*while(!tre.tom()){
+            System.out.println(tre);
+            tre.fjernHvis(x -> true);
+        }*/
 
 
     }

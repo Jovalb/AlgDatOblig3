@@ -533,12 +533,12 @@ public class ObligSBinTre<T> implements Beholder<T> {
             if (tom()) {
                 return;
             }
-            while (p.venstre != null) {
+            while (p.venstre != null) {     // begynner fra lengst venstre node
                 p = p.venstre;
             }
 
             while (p.venstre != null || p.høyre != null) {
-                p = nesteInorden(p);
+                p = nesteInorden(p);    // finner første i inorden uten barn
             }
         }
 
@@ -549,15 +549,16 @@ public class ObligSBinTre<T> implements Beholder<T> {
 
         @Override
         public T next() {
-            if (iteratorendringer != endringer) {
+            if (iteratorendringer != endringer) {   // sjekker at endringer stemmer
                 throw new ConcurrentModificationException("Iteratorendringer stemmer ikke med endringer!");
             } else if (hasNext()) {
-                T tempverdi = p.verdi;
-                p = nesteInorden(p);
+                removeOK = true;
+                q = p;  // lagrer verdien til den som skal printes
+                p = nesteInorden(p);    // fortsetter videre inorden
                 while (hasNext() && (p.venstre != null || p.høyre != null)) {  // sjekker om det er bladnode
                     p = nesteInorden(p);
                 }
-                return tempverdi;
+                return q.verdi;
             } else {
                 throw new NoSuchElementException("Ingen flere bladnoder!");
             }
@@ -565,7 +566,32 @@ public class ObligSBinTre<T> implements Beholder<T> {
 
         @Override
         public void remove() {
-            throw new UnsupportedOperationException("Ikke kodet ennå!");
+            if (!removeOK) {
+                throw new IllegalStateException("Ikke tillatt å bruke metoden!");
+            } else if (iteratorendringer != endringer) {
+                throw new ConcurrentModificationException("Iteratorendringer stemmer ikke med endringer!");
+            } else {
+                removeOK = false;
+            }
+            if (antall == 1){
+                p = null;
+            }
+            Node<T> q = p;
+            Node<T> parent = p.forelder;
+            if (parent.venstre == q){
+                parent.venstre = null;
+                q = null;
+            } else if (parent.høyre == q){
+                q = null;
+                parent.høyre = null;
+            }
+            next();
+
+            antall--;
+            endringer++;
+            iteratorendringer++;
+
+
         }
 
     } // BladnodeIterator
