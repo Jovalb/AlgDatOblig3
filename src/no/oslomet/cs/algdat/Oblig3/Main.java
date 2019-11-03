@@ -46,8 +46,10 @@ public class Main {
             System.out.println(e);
         }*/
 
-        System.out.println(tre.bladnodeverdier());
-        System.out.println(tre.postString());
+        /*System.out.println(tre.bladnodeverdier());
+        System.out.println(tre.postString());*/
+
+        for (Character c : tre) System.out.print(c + " ");
 
 
 

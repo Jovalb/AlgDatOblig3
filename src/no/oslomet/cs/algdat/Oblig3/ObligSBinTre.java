@@ -213,7 +213,7 @@ public class ObligSBinTre<T> implements Beholder<T> {
     }
 
     private static <T> Node<T> nesteInorden(Node<T> p) {
-        if (p == null){
+        if (p == null) {
             return null;
         }
 
@@ -453,60 +453,36 @@ public class ObligSBinTre<T> implements Beholder<T> {
         return stringArr;
     }
 
-    private void inOrderBladNoder(Node<T> node, StringJoiner stringJoiner){
-        if (node == null){
+    private void inOrderBladNoder(Node<T> node, StringJoiner stringJoiner) {
+        if (node == null) {
             return;
         }
 
-        inOrderBladNoder(node.venstre,stringJoiner);
-        if (node.venstre == null && node.høyre == null){
+        inOrderBladNoder(node.venstre, stringJoiner);
+        if (node.venstre == null && node.høyre == null) {
             stringJoiner.add(node.verdi.toString());
         }
-        inOrderBladNoder(node.høyre,stringJoiner);
+        inOrderBladNoder(node.høyre, stringJoiner);
     }
 
     public String bladnodeverdier() {
         Node<T> p = rot;
-        //StringBuilder stringBuilder = new StringBuilder();
-        StringJoiner stringJoiner = new StringJoiner(", ","[","]");
+        StringJoiner stringJoiner = new StringJoiner(", ", "[", "]");
         //      utnytter stringjoiner for å skape strengen
 
 
-        //stringBuilder.append("[");
-
-        if (tom()){
+        if (tom()) {
             return "[]";
         } else if (antall == 1) {
             stringJoiner.add(p.verdi.toString());
         } else {
-            inOrderBladNoder(rot,stringJoiner);
-            /*while(p.venstre != null){
-                p = p.venstre;
-            }
-
-            while (p != null){// her tar jeg i nytte inorden metoden fra tidligere
-                if (p.venstre != null || p.høyre != null){
-                    p = nesteInorden(p);
-                } else {
-                    String s = p.verdi.toString();
-                    stringJoiner.add(s);
-                    p = nesteInorden(p);
-                }
-                //stringBuilder.append(p.verdi + ", ");
-
-            }*/
-
+            inOrderBladNoder(rot, stringJoiner);
         }
-
-        //stringBuilder.append("]");
-
-
-        //return bladNodeHjelper(p,stringJoiner);
         return stringJoiner.toString();
     }
 
-    private void postOrderHjelper(Node<T> node, StringJoiner stringJoiner){
-        if (node == null){
+    private void postOrderHjelper(Node<T> node, StringJoiner stringJoiner) {
+        if (node == null) {
             return;
         }
 
@@ -515,30 +491,30 @@ public class ObligSBinTre<T> implements Beholder<T> {
         TabellStakk<Node<T>> stakk2 = new TabellStakk<>();
 
         stakk1.leggInn(node);       // begynner med roten
-        while (!stakk1.tom()){
+        while (!stakk1.tom()) {
             node = stakk1.taUt();       // roten legges inn først / henter ut siste node fra stakk 1
             stakk2.leggInn(node);
-            if (node.venstre != null){
+            if (node.venstre != null) {
                 stakk1.leggInn(node.venstre);       // traverserer først venstre
             }
-            if (node.høyre != null){        // deretter traverserer høyre
+            if (node.høyre != null) {        // deretter traverserer høyre
                 stakk1.leggInn(node.høyre);
             }
         }
 
-        while (!stakk2.tom()){
+        while (!stakk2.tom()) {
             stringJoiner.add(stakk2.taUt().toString());
         }
 
     }
 
     public String postString() {
-        if (tom()){
+        if (tom()) {
             return "[]";
         }
         Node<T> p = rot;
-        StringJoiner stringJoiner = new StringJoiner(", ","[","]");
-        postOrderHjelper(p,stringJoiner);
+        StringJoiner stringJoiner = new StringJoiner(", ", "[", "]");
+        postOrderHjelper(p, stringJoiner);
 
         return stringJoiner.toString();
     }
@@ -553,9 +529,17 @@ public class ObligSBinTre<T> implements Beholder<T> {
         private boolean removeOK = false;
         private int iteratorendringer = endringer;
 
-        private BladnodeIterator()  // konstruktør
-        {
-            throw new UnsupportedOperationException("Ikke kodet ennå!");
+        private BladnodeIterator() { // konstruktør
+            if (tom()) {
+                return;
+            }
+            while (p.venstre != null) {
+                p = p.venstre;
+            }
+
+            while (p.venstre != null || p.høyre != null) {
+                p = nesteInorden(p);
+            }
         }
 
         @Override
@@ -565,7 +549,18 @@ public class ObligSBinTre<T> implements Beholder<T> {
 
         @Override
         public T next() {
-            throw new UnsupportedOperationException("Ikke kodet ennå!");
+            if (iteratorendringer != endringer) {
+                throw new ConcurrentModificationException("Iteratorendringer stemmer ikke med endringer!");
+            } else if (hasNext()) {
+                T tempverdi = p.verdi;
+                p = nesteInorden(p);
+                while (hasNext() && (p.venstre != null || p.høyre != null)) {  // sjekker om det er bladnode
+                    p = nesteInorden(p);
+                }
+                return tempverdi;
+            } else {
+                throw new NoSuchElementException("Ingen flere bladnoder!");
+            }
         }
 
         @Override
